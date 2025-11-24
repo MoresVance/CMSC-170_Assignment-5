@@ -17,9 +17,9 @@ This is a project for compliance with CMSC 170.
 ```bash 
     conda activate cmsc170
 ```
-- install streamlit: 
+- install dependencies: 
 ```bash 
-    pip install streamlit
+    pip install streamlit numpy tensorflow
 ```
 
 - Now you are able to compile the program through streamlit

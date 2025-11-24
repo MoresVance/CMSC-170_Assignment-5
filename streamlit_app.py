@@ -2,8 +2,10 @@ import streamlit as st
 from PIL import Image
 import pandas as pd
 import io
-
-from sympy import false
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras.applications.efficientnet import EfficientNetB0, preprocess_input, decode_predictions
+from tensorflow.keras.preprocessing import image as keras_image
 
 
 # Set wide layout and page configuration
@@ -12,6 +14,30 @@ st.set_page_config(
     layout="wide", 
     initial_sidebar_state="expanded"
 )
+
+# Load the model
+@st.cache_resource
+def load_model():
+    model = EfficientNetB0(weights='imagenet')
+    return model
+
+model = load_model()
+
+# Prediction function
+def predict(image_bytes, model):
+    img = Image.open(image_bytes).convert('RGB')
+    img = img.resize((224, 224))
+    
+    # Preprocess the image
+    x = keras_image.img_to_array(img)
+    x = np.expand_dims(x, axis=0)
+    x = preprocess_input(x)
+    
+    # Make prediction
+    preds = model.predict(x)
+    decoded_preds = decode_predictions(preds, top=5)[0]
+    
+    return decoded_preds
 
 ## Sidebar Panel
 # ----------------------------------------------------------------------
@@ -50,11 +76,15 @@ with col1:
         st.image(image, caption='Uploaded Image', use_container_width=True)
         
         # Predict Button
-        if st.button("🚀 **Predict**", key="predict_button", use_container_width=True):
+        if st.button("**Predict**", key="predict_button", use_container_width=True):
             with st.spinner('Processing image and running model...'):
                 # Convert uploaded file to bytes for the model function
                 image_bytes = io.BytesIO(uploaded_file.getvalue())
                 
+                # Get predictions
+                predictions = predict(image_bytes, model)
+                st.session_state.predictions = predictions
+                st.session_state.top_1_class = predictions[0][1].replace('_', ' ').title()
                 
     else:
         st.markdown(
@@ -79,10 +109,10 @@ with col1:
 
 # Results Display Area
 with col2:
-    if false:
-        st.success("✅ **Prediction Complete!**")
+    if 'predictions' in st.session_state:
+        st.success("**Prediction Complete!**")
         
-        st.subheader("🥇 Top Prediction")
+        st.subheader("Top Prediction")
         # Custom HTML to display the top prediction highlighted in green
         top_class_html = f"""
             <div style="
@@ -103,8 +133,15 @@ with col2:
         st.markdown("---")
 
         ### Bar Graph Showing Top-5 Predicted Classes
-        st.subheader("📊 Top 5 Predictions and Confidence")
+        st.subheader("Top 5 Predictions and Confidence")
         
+        # Create a DataFrame for the bar chart
+        df_preds = pd.DataFrame(
+            [(class_name.replace('_', ' ').title(), prob) for _, class_name, prob in st.session_state.predictions],
+            columns=['Class', 'Confidence']
+        )
+        
+        st.bar_chart(df_preds.set_index('Class'))
         
         st.caption("Confidence score represents the model's certainty (0.0 to 1.0).")
         
