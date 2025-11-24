@@ -10,7 +10,7 @@ from tensorflow.keras.preprocessing import image as keras_image
 
 # Set wide layout and page configuration
 st.set_page_config(
-    page_title="AI Image Classifier", 
+    page_title="ImageNet Classifier", 
     layout="wide", 
     initial_sidebar_state="expanded"
 )
@@ -48,9 +48,9 @@ def clear_predictions():
 ## Sidebar Panel
 # ----------------------------------------------------------------------
 with st.sidebar:
-    st.title("AI Image Classifier")
+    st.title("ImageNet Classifier")
     st.markdown("""
-        **A simple application to classify uploaded images using a machine learning model.**
+        **A simple application to classify uploaded images using the EfficientNetB0 model pretrained on ImageNet.**
         
         ---
         
