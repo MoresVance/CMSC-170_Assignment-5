@@ -19,7 +19,12 @@ This is a project for compliance with CMSC 170.
 ```
 - install dependencies: 
 ```bash 
-    pip install streamlit numpy tensorflow
+    pip install streamlit numpy tensorflow requests
+```
+
+- run the setup.py (if the models folder is missing or something is wrong with the saved models):
+```bash 
+    python setup.py
 ```
 
 - Now you are able to compile the program through streamlit

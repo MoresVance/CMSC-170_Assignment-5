@@ -18,7 +18,8 @@ st.set_page_config(
 # Load the model
 @st.cache_resource
 def load_model():
-    model = EfficientNetB0(weights='imagenet')
+    model = tf.keras.applications.EfficientNetB0(weights=None)
+    model.load_weights('models/efficientnetb0.weights.h5')
     return model
 
 model = load_model()
