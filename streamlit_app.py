@@ -10,7 +10,7 @@ from tensorflow.keras.preprocessing import image as keras_image
 
 # Set wide layout and page configuration
 st.set_page_config(
-    page_title="AI Classification App", 
+    page_title="AI Image Classifier", 
     layout="wide", 
     initial_sidebar_state="expanded"
 )
@@ -39,6 +39,12 @@ def predict(image_bytes, model):
     
     return decoded_preds
 
+def clear_predictions():
+    if 'predictions' in st.session_state:
+        del st.session_state.predictions
+    if 'top_1_class' in st.session_state:
+        del st.session_state.top_1_class
+
 ## Sidebar Panel
 # ----------------------------------------------------------------------
 with st.sidebar:
@@ -62,7 +68,8 @@ uploaded_file = st.file_uploader(
     "Choose an image file...",
     type=['jpg', 'jpeg', 'png'],
     accept_multiple_files=False,
-    help="Drag and drop or browse to upload an image (.jpg, .jpeg, or .png)"
+    help="Drag and drop or browse to upload an image (.jpg, .jpeg, or .png)",
+    on_change=clear_predictions,
 )
 
 
@@ -146,6 +153,6 @@ with col2:
         st.caption("Confidence score represents the model's certainty (0.0 to 1.0).")
         
     else:
-        st.subheader("Results Display Area")
-        st.info("Upload an image and click 'Predict' to see the classification results here.")
+        st.subheader("Results Will Appear Here:")
+        st.info("Tip: Upload an image and click 'Predict' to see the classification results here.")
 
