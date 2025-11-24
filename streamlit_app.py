@@ -55,7 +55,7 @@ with st.sidebar:
         ---
         
         ### **Instructions**
-        1. **Upload** an image file below (.jpg, .jpeg, or .png).
+        1. **Upload** an image file to the right (.jpg, .jpeg, or .png).
         2. Click the **'Predict'** button.
         3. View the top prediction and confidence scores in the main panel.
     """)
@@ -108,7 +108,7 @@ with col1:
                 align-items: center;
             ">
                 <p style="font-size: 1.1em; color: #888;">No Image Uploaded</p>
-                <p style="font-size: 0.9em; color: #aaa;">Upload an image on the left to begin.</p>
+                <p style="font-size: 0.9em; color: #aaa;">Upload an image above to begin.</p>
             </div>
             """, 
             unsafe_allow_html=True
@@ -153,6 +153,6 @@ with col2:
         st.caption("Confidence score represents the model's certainty (0.0 to 1.0).")
         
     else:
-        st.subheader("Results Will Appear Here:")
+        st.subheader("Results")
         st.info("Tip: Upload an image and click 'Predict' to see the classification results here.")
 
